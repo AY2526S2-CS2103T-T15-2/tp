@@ -291,12 +291,13 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​                                    | I want to …​                 | So that I can…​                                                        |
 |----------|--------------------------------------------|------------------------------|------------------------------------------------------------------------|
-| `* * *`  | new user                                   | see usage instructions       | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person             |                                                                        |
-| `* * *`  | user                                       | delete a person              | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name        | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name         | locate a person easily                                                 |
+| `* * *`  | Standard Operative                                   | add a contact with essential details       | i can store new intelligence sources                 |
+| `* * *`  | Standard Operative                                       | view a list of contacts              |  i can see all stored intelligence sources                                                                      |
+| `* * *`  | Standard Operative                                       | delete contacts              | i remove compromised sources                                   |
+| `* * *`  | Expert Operative                                       | switch to a facade interface that displays harmless-looking data         | casual observers do not suspect the app's true purpose |
+| `* *`    | Standard Operative                                       | edit contact information | records remain accurate                |
+| `* *`    | Standard Operative                                       | search contacts by keyword | i can quickly retrieve information under pressure                |
+| `* *`      | Expert Operative | mask sensitive contact details in the display         | casual observers cannot read sensitive information                                                  |
 
 *{More to be added}*
 
