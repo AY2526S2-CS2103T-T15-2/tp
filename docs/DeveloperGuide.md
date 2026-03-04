@@ -303,30 +303,128 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Use cases
 
-(For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is the `SpyGlass` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Delete a person**
+**Use case: Lock application (activate Dummy view)**
 
 **MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+1. User decides to hide the real application interface.
+2. User enters the command `lock`.
+3. SpyGlass switches the UI from the real application view to the Dummy view.
+4. SpyGlass continues operating as a normal-looking addressbook application.
 
-    Use case ends.
+   Use case ends.
 
 **Extensions**
 
-* 2a. The list is empty.
+* 2a. The command entered is invalid.
+
+  * 2a1. SpyGlass shows an error message.
 
   Use case ends.
 
-* 3a. The given index is invalid.
+* 3a. The user performs operations while the system is locked.
 
-    * 3a1. AddressBook shows an error message.
+  * 3a1. SpyGlass accepts the operation.
+  * 3a2. SpyGlass stores the data in Dummy storage instead of secure storage.
 
-      Use case resumes at step 2.
+  Use case ends.
+
+* 4a. The application is force closed while unlocked.
+
+  * 4a1. On next startup, SpyGlass restores the Dummy view by default.
+
+  Use case ends.
+
+---
+
+**Use case: Unlock application**
+
+**MSS**
+
+1. User is currently interacting with the Dummy view.
+2. User enters the secret password previously set.
+3. SpyGlass switches the UI from the Dummy view to the real application interface.
+4. SpyGlass loads the real contact list and shows success message
+
+   Use case ends.
+
+**Extensions**
+
+* 3a. The entered password is incorrect.
+
+  * 3a1. SpyGlass remains in the Dummy view.
+  * 3a2. SpyGlass shows an error message.
+
+  Use case ends.
+
+* 3b. Multiple rapid incorrect password attempts occur.
+
+  * 3b1. SpyGlass continues displaying unknown command error message.
+  * 3b2. SpyGlass temporarily delays processing of further inputs.
+
+  Use case ends.
+
+---
+
+**Use case: Add a contact**
+
+**MSS**
+
+1. User requests to add a contact with required details.
+2. User adds the new contact with relevant details.
+3. SpyGlass saves the new contact and updates the contact list display.
+4. SpyGlass updates the command history to show user added a new contact.
+
+   Use case ends.
+
+**Extensions**
+
+* 3a. A required parameter is missing.
+
+  * 3a1. SpyGlass shows an error message indicating the missing parameter.
+
+  Use case ends.
+
+* 3b. A parameter fails validation.
+
+  * 3b1. SpyGlass shows the corresponding validation error message.
+
+  Use case ends.
+
+* 4a. The contact already exists.
+
+  * 4a1. SpyGlass shows an error message indicating the contact already exists.
+
+  Use case ends.
+
+---
+
+**Use case: Delete a contact**
+
+**MSS**
+
+1. User requests to delete a specific contact in the list by index.
+2. SpyGlass deletes the contact.
+3. SpyGlass updates the contact list display.
+4. SpyGlass updates the command history to reflect user deleted a contact.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. The given index is invalid.
+
+  * 1a1. SpyGlass shows an error message.
+
+  Use case resumes at step 2.
+
+* 2a. SpyGlass fails to save the deletion to storage.
+
+  * 2a1. SpyGlass shows  an error message indicating storage failed.
+
+  Use case ends.
 
 *{More to be added}*
 
