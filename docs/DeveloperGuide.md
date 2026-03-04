@@ -402,30 +402,24 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1. User requests to list contacts.
-2. SpyGlass shows a list of contacts.
-3. User requests to delete a specific contact in the list by index.
-4. SpyGlass deletes the contact.
-5. SpyGlass updates the contact list display.
-6. SpyGlass updates the command history to reflect user deleted a contact.
+1. User requests to delete a specific contact in the list by index.
+2. SpyGlass deletes the contact.
+3. SpyGlass updates the contact list display.
+4. SpyGlass updates the command history to reflect user deleted a contact.
 
    Use case ends.
 
 **Extensions**
 
-* 2a. The contact list is empty.
+* 1a. The given index is invalid.
 
-  Use case ends.
-
-* 3a. The given index is invalid.
-
-  * 3a1. SpyGlass shows an error message.
+  * 1a1. SpyGlass shows an error message.
 
   Use case resumes at step 2.
 
-* 4a. SpyGlass fails to save the deletion to storage.
+* 2a. SpyGlass fails to save the deletion to storage.
 
-  * 4a1. SpyGlass shows  an error message indicating storage failed.
+  * 2a1. SpyGlass shows  an error message indicating storage failed.
 
   Use case ends.
 
