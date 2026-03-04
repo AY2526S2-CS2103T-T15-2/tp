@@ -341,6 +341,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
 * **Private contact detail**: A contact detail that is not meant to be shared with others
+* **Dummy Interface**: A harmless, functional-looking address book interface used to disguise the application's true purpose from casual observers during high-stress situations.
+* **Secure Storage**: The primary, hidden database where actual, sensitive intelligence contacts are persistently saved.
+* **Dummy Storage**: A secondary, non-sensitive database that saves any contacts added while the app is locked, ensuring the facade behaves realistically without contaminating the secure database.
+* **Index**: A positive integer representing a contact's temporary position in the currently displayed UI list, rather than a permanent ID in the database.
+* **State Leakage**: A security vulnerability where the application accidentally reveals its "unlocked" state or sensitive data upon restarting after being forcefully closed.
+* **Command Collision**: A conflict that occurs when a user's hidden password accidentally matches a standard, functional command reserved for the facade.
 
 --------------------------------------------------------------------------------------------------------------------
 
