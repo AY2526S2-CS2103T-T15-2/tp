@@ -49,6 +49,10 @@ public class MainWindow extends UiPart<Stage> {
     @FXML
     private StackPane summaryPlaceholder;
 
+    /**
+     * Creates a {@code MainWindow} with the given {@code Stage} and {@code Logic}.
+     */
+
     public MainWindow(Stage primaryStage, Logic logic) {
         super(FXML, primaryStage);
 
@@ -102,6 +106,9 @@ public class MainWindow extends UiPart<Stage> {
         }
     }
 
+    /**
+     * Opens the help window or focuses on it if it is already opened.
+     */
     @FXML
     public void handleHelp() {
         if (!helpWindow.isShowing()) {
