@@ -21,10 +21,10 @@ public class SpyglassMainPanel extends UiPart<Region> {
 
     private static final String FXML = "spyglass/MainPanel.fxml";
 
+    // Independent Ui parts residing in this Ui container
     private final CommandBox commandBox;
     private final ResultDisplay resultDisplay;
     private final PersonListPanel personListPanel;
-    private final StatusBarFooter statusBarFooter;
     private final SpyglassHelpWindow helpWindow;
     private final Runnable exitAction;
 
@@ -38,7 +38,7 @@ public class SpyglassMainPanel extends UiPart<Region> {
     @FXML
     private StackPane personListPanelPlaceholder;
     @FXML
-    private StackPane statusbarPlaceholder;
+    private StackPane summaryPlaceholder; // TODO: Currently unused, reserved for future use
 
     /**
      * Creates a {@code MainPanel} for spyglass mode.
@@ -50,13 +50,11 @@ public class SpyglassMainPanel extends UiPart<Region> {
         commandBox = new CommandBox(executor);
         resultDisplay = new ResultDisplay();
         personListPanel = new PersonListPanel(personList);
-        statusBarFooter = new StatusBarFooter(filePath);
         helpWindow = new SpyglassHelpWindow();
 
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
-        statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
         setAccelerators();
     }
