@@ -1,4 +1,4 @@
-package seedu.address.logic.parser;
+package seedu.address.logic.parser.spyglass;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
@@ -8,27 +8,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.logic.commands.AddCommand;
-import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
-import seedu.address.logic.commands.DeleteCommand;
-import seedu.address.logic.commands.EditCommand;
-import seedu.address.logic.commands.ExitCommand;
-import seedu.address.logic.commands.FindCommand;
-import seedu.address.logic.commands.HelpCommand;
-import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.spyglass.AddCommand;
+import seedu.address.logic.commands.spyglass.ClearCommand;
+import seedu.address.logic.commands.spyglass.DeleteCommand;
+import seedu.address.logic.commands.spyglass.EditCommand;
+import seedu.address.logic.commands.spyglass.ExitCommand;
+import seedu.address.logic.commands.spyglass.FindCommand;
+import seedu.address.logic.commands.spyglass.HelpCommand;
+import seedu.address.logic.commands.spyglass.ListCommand;
+import seedu.address.logic.commands.spyglass.LockCommand;
+import seedu.address.logic.parser.Parser;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
  * Parses user input.
  */
-public class AddressBookParser {
+public class SpyglassParser implements Parser {
 
     /**
      * Used for initial separation of command word and args.
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
-    private static final Logger logger = LogsCenter.getLogger(AddressBookParser.class);
+    private static final Logger logger = LogsCenter.getLogger(SpyglassParser.class);
 
     /**
      * Parses user input into command for execution.
@@ -37,6 +39,7 @@ public class AddressBookParser {
      * @return the command based on the user input
      * @throws ParseException if the user input does not conform the expected format
      */
+    @Override
     public Command parseCommand(String userInput) throws ParseException {
         final Matcher matcher = BASIC_COMMAND_FORMAT.matcher(userInput.trim());
         if (!matcher.matches()) {
@@ -70,6 +73,9 @@ public class AddressBookParser {
 
         case ListCommand.COMMAND_WORD:
             return new ListCommand();
+
+        case LockCommand.COMMAND_WORD:
+            return new LockCommand();
 
         case ExitCommand.COMMAND_WORD:
             return new ExitCommand();

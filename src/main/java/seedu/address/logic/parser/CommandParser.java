@@ -4,13 +4,13 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
- * Contract for mode-specific command parsers.
+ * Represents a parser that is able to parse user input into a {@code Command} of type {@code T}.
  */
-public interface Parser {
+public interface CommandParser<T extends Command> {
 
     /**
      * Parses {@code userInput} into a command and returns it.
      * @throws ParseException if {@code userInput} does not conform the expected format
      */
-    Command parseCommand(String userInput) throws ParseException;
+    T parse(String userInput) throws ParseException;
 }

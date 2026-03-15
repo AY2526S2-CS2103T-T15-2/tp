@@ -13,16 +13,17 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.AddCommand;
-import seedu.address.logic.commands.ClearCommand;
-import seedu.address.logic.commands.DeleteCommand;
-import seedu.address.logic.commands.EditCommand;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
-import seedu.address.logic.commands.ExitCommand;
-import seedu.address.logic.commands.FindCommand;
-import seedu.address.logic.commands.HelpCommand;
-import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.spyglass.AddCommand;
+import seedu.address.logic.commands.spyglass.ClearCommand;
+import seedu.address.logic.commands.spyglass.DeleteCommand;
+import seedu.address.logic.commands.spyglass.EditCommand;
+import seedu.address.logic.commands.spyglass.ExitCommand;
+import seedu.address.logic.commands.spyglass.FindCommand;
+import seedu.address.logic.commands.spyglass.HelpCommand;
+import seedu.address.logic.commands.spyglass.ListCommand;
+import seedu.address.logic.commands.spyglass.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.spyglass.SpyglassParser;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
@@ -31,7 +32,7 @@ import seedu.address.testutil.PersonUtil;
 
 public class AddressBookParserTest {
 
-    private final AddressBookParser parser = new AddressBookParser();
+    private final SpyglassParser parser = new SpyglassParser();
 
     @Test
     public void parseCommand_add() throws Exception {
