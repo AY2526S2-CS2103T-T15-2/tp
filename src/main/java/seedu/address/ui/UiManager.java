@@ -65,7 +65,9 @@ public class UiManager implements Ui {
     private static void showAlertDialogAndWait(Stage owner, AlertType type, String title, String headerText,
                                                String contentText) {
         final Alert alert = new Alert(type);
-        alert.getDialogPane().getStylesheets().add("view/DarkTheme.css");
+        // UiManager is mode-agnostic and this path is always available, so alerts use dummy theme as fallback.
+        alert.getDialogPane().getStylesheets().add(
+                MainApp.class.getResource("/view/dummy/DarkTheme.css").toExternalForm());
         alert.initOwner(owner);
         alert.setTitle(title);
         alert.setHeaderText(headerText);

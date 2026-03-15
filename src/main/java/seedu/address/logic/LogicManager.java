@@ -11,8 +11,13 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.parser.AddressBookParser;
+import seedu.address.logic.parser.Parser;
+import seedu.address.logic.parser.ParserManager;
+import seedu.address.logic.parser.dummy.DummyCommandParser;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.parser.spyglass.SpyglassParser;
+import seedu.address.model.AppMode;
+import seedu.address.model.AppModeManager;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.person.Person;
@@ -31,15 +36,25 @@ public class LogicManager implements Logic {
 
     private final Model model;
     private final Storage storage;
-    private final AddressBookParser addressBookParser;
+    private final AppModeManager modeManager;
+    private final Parser parserManager;
 
     /**
      * Constructs a {@code LogicManager} with the given {@code Model} and {@code Storage}.
+     * The {@code ModeManager} will be initialized to the default locked mode.
      */
     public LogicManager(Model model, Storage storage) {
+        this(model, storage, new AppModeManager(AppMode.LOCKED));
+    }
+
+    /**
+     * Constructs a {@code LogicManager} with an explicit runtime mode manager.
+     */
+    public LogicManager(Model model, Storage storage, AppModeManager modeManager) {
         this.model = model;
         this.storage = storage;
-        addressBookParser = new AddressBookParser();
+        this.modeManager = modeManager;
+        this.parserManager = new ParserManager(modeManager, new SpyglassParser(), new DummyCommandParser());
     }
 
     @Override
@@ -47,8 +62,16 @@ public class LogicManager implements Logic {
         logger.info("----------------[USER COMMAND][" + commandText + "]");
 
         CommandResult commandResult;
-        Command command = addressBookParser.parseCommand(commandText);
+        Command command = parserManager.parseCommand(commandText);
         commandResult = command.execute(model);
+
+        commandResult.getRequestedMode().ifPresent(requestedMode -> {
+            if (requestedMode == AppMode.LOCKED) {
+                modeManager.lock();
+            } else {
+                modeManager.unlock();
+            }
+        });
 
         try {
             storage.saveAddressBook(model.getAddressBook());
