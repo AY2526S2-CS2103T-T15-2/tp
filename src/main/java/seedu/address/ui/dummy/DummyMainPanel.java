@@ -69,6 +69,9 @@ public class DummyMainPanel extends UiPart<Region> {
         helpWindow.hide();
     }
 
+    /**
+     * Opens the help window or focuses on it if it's already opened.
+     */
     @FXML
     public void handleHelp() {
         if (!helpWindow.isShowing()) {

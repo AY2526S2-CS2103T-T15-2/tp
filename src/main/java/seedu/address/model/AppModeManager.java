@@ -18,7 +18,7 @@ public class AppModeManager {
     }
 
     public void lock() {
-        appMode = AppMode.LOCKED;   
+        appMode = AppMode.LOCKED;
     }
 
     public void unlock() {

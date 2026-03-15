@@ -5,13 +5,13 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import seedu.address.MainApp;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.MainApp;
 import seedu.address.model.AppMode;
 import seedu.address.ui.dummy.DummyMainPanel;
 import seedu.address.ui.spyglass.SpyglassMainPanel;
@@ -101,8 +101,7 @@ public class MainWindow extends UiPart<Stage> {
     private void setMode(AppMode mode) {
         currentMode = mode;
         boolean isLocked = mode == AppMode.LOCKED;
-        modePanelPlaceholder.getChildren().setAll(
-                (isLocked ? dummyMainPanel : spyglassMainPanel).getRoot());
+        modePanelPlaceholder.getChildren().setAll((isLocked ? dummyMainPanel : spyglassMainPanel).getRoot());
         String themeFolder = isLocked ? "dummy" : "spyglass";
         primaryStage.getScene().getStylesheets().setAll(
                 MainApp.class.getResource("/view/" + themeFolder + "/DarkTheme.css").toExternalForm(),

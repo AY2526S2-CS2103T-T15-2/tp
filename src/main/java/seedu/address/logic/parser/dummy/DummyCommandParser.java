@@ -28,7 +28,7 @@ public class DummyCommandParser implements Parser {
         }
 
         final String commandWord = matcher.group("commandWord");
-        
+
         switch (commandWord) {
 
         case UnlockCommand.COMMAND_WORD:
