@@ -1,4 +1,4 @@
-package seedu.address.ui;
+package seedu.address.ui.dummy;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -7,6 +7,7 @@ import javafx.scene.layout.Region;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.ui.UiPart;
 
 /**
  * The UI component that is responsible for receiving user command inputs.
@@ -14,7 +15,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class CommandBox extends UiPart<Region> {
 
     public static final String ERROR_STYLE_CLASS = "error";
-    private static final String FXML = "CommandBox.fxml";
+    private static final String FXML = "dummy/CommandBox.fxml";
 
     private final CommandExecutor commandExecutor;
 
@@ -81,5 +82,4 @@ public class CommandBox extends UiPart<Region> {
          */
         CommandResult execute(String commandText) throws CommandException, ParseException;
     }
-
 }
