@@ -23,6 +23,8 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.commands.spyglass.AddCommand;
 import seedu.address.logic.commands.spyglass.ListCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.AppMode;
+import seedu.address.model.AppModeManager;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.ReadOnlyAddressBook;
@@ -49,7 +51,7 @@ public class LogicManagerTest {
                 new JsonAddressBookStorage(temporaryFolder.resolve("addressBook.json"));
         JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(temporaryFolder.resolve("userPrefs.json"));
         StorageManager storage = new StorageManager(addressBookStorage, userPrefsStorage);
-        logic = new LogicManager(model, storage);
+        logic = new LogicManager(model, storage, new AppModeManager(AppMode.UNLOCKED));
     }
 
     @Test
@@ -162,7 +164,7 @@ public class LogicManagerTest {
                 new JsonUserPrefsStorage(temporaryFolder.resolve("ExceptionUserPrefs.json"));
         StorageManager storage = new StorageManager(addressBookStorage, userPrefsStorage);
 
-        logic = new LogicManager(model, storage);
+        logic = new LogicManager(model, storage, new AppModeManager(AppMode.UNLOCKED));
 
         // Triggers the saveAddressBook method by executing an add command
         String addCommand = AddCommand.COMMAND_WORD + NAME_DESC_AMY + PHONE_DESC_AMY
