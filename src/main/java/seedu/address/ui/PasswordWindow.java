@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.security.util.PasswordUtil;
 
 /**
  * Controller for the password setup window.
@@ -57,6 +58,9 @@ public class PasswordWindow extends UiPart<Stage> {
 
     /**
      * Sets the default size and position of the window based on {@code guiSettings}.
+     *
+     * @param stage The stage to configure.
+     * @param guiSettings The settings to apply.
      */
     private void setWindowDefaultSize(Stage stage, GuiSettings guiSettings) {
         stage.setHeight(guiSettings.getWindowHeight());
@@ -78,6 +82,8 @@ public class PasswordWindow extends UiPart<Stage> {
     /**
      * Returns the password entered by the user, wrapped in an {@code Optional}.
      * Returns an empty {@code Optional} if the user closed the window without entering a password.
+     *
+     * @return An Optional containing the entered password.
      */
     public Optional<String> getPassword() {
         return Optional.ofNullable(passwordEntered);
@@ -94,22 +100,29 @@ public class PasswordWindow extends UiPart<Stage> {
 
     /**
      * Handles the event when the user attempts to submit a password.
-     * Validates that the input is not empty before closing the window.
+     * Validates that the input satisfies the security constraints before closing the window.
      */
     @FXML
-    private void handleLogin() {
+    private void handlePasswordSetup() {
         String input = passwordInput.getText();
-
         clearError();
 
-        if (input == null || input.trim().isEmpty()) {
-            errorMessage.setText("Password cannot be empty!");
-            errorMessage.getStyleClass().add("error");
-            passwordInput.getStyleClass().add("error");
-            logger.info("Empty password attempt blocked.");
+        if (!PasswordUtil.isValidPassword(input)) {
+            showError(PasswordUtil.MESSAGE_CONSTRAINTS);
         } else {
             passwordEntered = input;
             getRoot().close();
         }
+    }
+
+    /**
+     * Displays an error message and applies error styling to the input field and label.
+     *
+     * @param message The error message to display.
+     */
+    private void showError(String message) {
+        errorMessage.setText(message);
+        errorMessage.getStyleClass().add("error");
+        passwordInput.getStyleClass().add("error");
     }
 }
