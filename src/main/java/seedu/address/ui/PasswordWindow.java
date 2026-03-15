@@ -108,7 +108,7 @@ public class PasswordWindow extends UiPart<Stage> {
         clearError();
 
         if (!PasswordUtil.isValidPassword(input)) {
-            showError(PasswordUtil.MESSAGE_CONSTRAINTS);
+            showError(PasswordUtil.getValidationError(input));
         } else {
             passwordEntered = input;
             getRoot().close();
