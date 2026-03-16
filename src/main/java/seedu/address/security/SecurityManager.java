@@ -2,7 +2,6 @@ package seedu.address.security;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -29,13 +28,13 @@ public class SecurityManager implements Security {
 
     /**
      * Constructs a {@code SecurityManager} for production use.
-     * Uses the default data path {@code data/password.txt} and initializes a real
+     * Uses the password path from logic and initializes a real
      * {@link PasswordWindow} to collect user input.
      *
      * @param logic The logic component used to retrieve GUI settings for the UI.
      */
     public SecurityManager(Logic logic) {
-        this(logic, Paths.get("data", "password.txt"), () -> {
+        this(logic, logic.getAddressBookPasswordPath(), () -> {
             PasswordWindow passwordWindow = new PasswordWindow(logic.getGuiSettings());
             passwordWindow.show();
             return passwordWindow.getPassword();
@@ -92,17 +91,21 @@ public class SecurityManager implements Security {
     }
 
     /**
-     * Hashes the provided raw password and writes it to the local filesystem.
-     * This method handles directory creation if the parent folders do not exist.
+     * Saves the provided raw password to the local filesystem.
      *
-     * @param rawPassword The plain text password entered by the user.
-     * @return True if the hashed password was successfully written to disk; false otherwise.
+     * @param password The plain text password entered by the user.
+     * @return True if the password was successfully written; false otherwise.
      */
-    private boolean savePassword(String rawPassword) {
+    private boolean savePassword(String password) {
         try {
-            String hashedPassword = PasswordUtil.hashPassword(rawPassword);
+            if (!PasswordUtil.isValidPassword(password)) {
+                logger.warning("Attempted to save an invalid password.");
+                return false;
+            }
+
             FileUtil.createParentDirsOfFile(passwordFilePath);
-            FileUtil.writeToFile(passwordFilePath, hashedPassword);
+            FileUtil.writeToFile(passwordFilePath, password);
+
             logger.info("Security setup complete: Password saved to " + passwordFilePath);
             return true;
         } catch (IOException e) {

@@ -2,10 +2,8 @@ package seedu.address.security.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.testutil.Assert.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,33 +12,6 @@ import org.junit.jupiter.api.Test;
  * Focuses on hashing consistency and validation rules for application setup.
  */
 public class PasswordUtilTest {
-
-    // Hashing Logic Tests
-
-    @Test
-    public void hashPassword_validInput_returnsCorrectLength() {
-        String hash = PasswordUtil.hashPassword("myPassword123");
-        // SHA-256 hex string is always 64 characters
-        assertEquals(64, hash.length());
-    }
-
-    @Test
-    public void hashPassword_emptyString_returnsCorrectLength() {
-        String hash = PasswordUtil.hashPassword("");
-        assertEquals(64, hash.length());
-    }
-
-    @Test
-    public void hashPassword_nullInput_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> PasswordUtil.hashPassword(null));
-    }
-
-    @Test
-    public void hashPassword_differentInputs_produceDifferentHashes() {
-        String hash1 = PasswordUtil.hashPassword("abc");
-        String hash2 = PasswordUtil.hashPassword("abd");
-        assertNotEquals(hash1, hash2);
-    }
 
     // Validation Logic Tests
 

@@ -77,6 +77,11 @@ public class LogicManager implements Logic {
     }
 
     @Override
+    public Path getAddressBookPasswordPath() {
+        return model.getUserPrefs().getAddressBookPasswordPath();
+    }
+
+    @Override
     public GuiSettings getGuiSettings() {
         return model.getGuiSettings();
     }

@@ -49,8 +49,8 @@ public class PasswordWindow extends UiPart<Stage> {
         super(FXML, root);
         setWindowDefaultSize(root, guiSettings);
 
-        root.setMinWidth(450);
-        root.setMinHeight(400);
+        root.setMinWidth(900);
+        root.setMinHeight(650);
 
         // Listener to clear error as soon as user starts typing
         passwordInput.textProperty().addListener((observable, oldValue, newValue) -> clearError());
