@@ -2,7 +2,6 @@ package seedu.address.security;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -29,13 +28,13 @@ public class SecurityManager implements Security {
 
     /**
      * Constructs a {@code SecurityManager} for production use.
-     * Uses the default data path {@code data/password.txt} and initializes a real
+     * Uses the password path from logic and initializes a real
      * {@link PasswordWindow} to collect user input.
      *
      * @param logic The logic component used to retrieve GUI settings for the UI.
      */
     public SecurityManager(Logic logic) {
-        this(logic, Paths.get("data", "password.txt"), () -> {
+        this(logic, logic.getAddressBookPasswordPath(), () -> {
             PasswordWindow passwordWindow = new PasswordWindow(logic.getGuiSettings());
             passwordWindow.show();
             return passwordWindow.getPassword();

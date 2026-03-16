@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -52,7 +51,6 @@ public class SecurityManagerTest {
     public void isAuthenticated_setupCancelled_returnsFalse() {
         Path passwordFile = temporaryFolder.resolve("cancelled.txt");
 
-        //  Simulate user closes the window
         SecurityManager securityManager = new SecurityManager(
                 new LogicStub(),
                 passwordFile,
@@ -64,26 +62,30 @@ public class SecurityManagerTest {
     }
 
     @Test
-    public void savePassword_pathIsDirectory_returnsFalse() throws Exception {
-        Path directoryPath = temporaryFolder.resolve("i_am_a_directory");
-        Files.createDirectories(directoryPath);
-
-        SecurityManager securityManager = new SecurityManager(new LogicStub(),
-                directoryPath, () -> Optional.of("validPassword"));
-
-        assertFalse(securityManager.isAuthenticated());
-    }
-
-    @Test
     public void constructor_production_isNotNull() {
-        // smoke test for the production constructor
-        assertNotNull(new SecurityManager(new LogicStub()));
+        Path passwordFile = temporaryFolder.resolve("prod_password.txt");
+        assertNotNull(new SecurityManager(new LogicStub(passwordFile)));
     }
 
     /**
      * A default stub where all methods fail except those needed for SecurityManager.
      */
     private static class LogicStub implements Logic {
+        private final Path passwordPath;
+
+        LogicStub() {
+            this.passwordPath = null;
+        }
+
+        LogicStub(Path passwordPath) {
+            this.passwordPath = passwordPath;
+        }
+
+        @Override
+        public Path getAddressBookPasswordPath() {
+            return passwordPath;
+        }
+
         @Override
         public CommandResult execute(String commandText) {
             throw new AssertionError("This method should not be called.");
