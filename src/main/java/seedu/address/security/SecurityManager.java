@@ -92,17 +92,21 @@ public class SecurityManager implements Security {
     }
 
     /**
-     * Hashes the provided raw password and writes it to the local filesystem.
-     * This method handles directory creation if the parent folders do not exist.
+     * Saves the provided raw password to the local filesystem.
      *
-     * @param rawPassword The plain text password entered by the user.
-     * @return True if the hashed password was successfully written to disk; false otherwise.
+     * @param password The plain text password entered by the user.
+     * @return True if the password was successfully written; false otherwise.
      */
-    private boolean savePassword(String rawPassword) {
+    private boolean savePassword(String password) {
         try {
-            String hashedPassword = PasswordUtil.hashPassword(rawPassword);
+            if (!PasswordUtil.isValidPassword(password)) {
+                logger.warning("Attempted to save an invalid password.");
+                return false;
+            }
+
             FileUtil.createParentDirsOfFile(passwordFilePath);
-            FileUtil.writeToFile(passwordFilePath, hashedPassword);
+            FileUtil.writeToFile(passwordFilePath, password);
+
             logger.info("Security setup complete: Password saved to " + passwordFilePath);
             return true;
         } catch (IOException e) {

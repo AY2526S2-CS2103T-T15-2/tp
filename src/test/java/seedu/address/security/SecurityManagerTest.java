@@ -19,7 +19,6 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.person.Person;
-import seedu.address.security.util.PasswordUtil;
 
 public class SecurityManagerTest {
 
@@ -29,7 +28,7 @@ public class SecurityManagerTest {
     @Test
     public void isAuthenticated_fileExists_returnsTrue() throws Exception {
         Path passwordFile = temporaryFolder.resolve("password.txt");
-        FileUtil.writeToFile(passwordFile, "any_hash");
+        FileUtil.writeToFile(passwordFile, "any_pw");
 
         SecurityManager securityManager = new SecurityManager(new LogicStub(), passwordFile, Optional::empty);
 
@@ -39,14 +38,14 @@ public class SecurityManagerTest {
     @Test
     public void isAuthenticated_fileMissing_successfulSetup() throws Exception {
         Path passwordFile = temporaryFolder.resolve("new_password.txt");
-        String rawPassword = "nusStudent2026";
+        String password = "nusStudent2026";
 
         SecurityManager securityManager = new SecurityManager(new LogicStub(),
-                passwordFile, () -> Optional.of(rawPassword));
+                passwordFile, () -> Optional.of(password));
 
         assertTrue(securityManager.isAuthenticated());
         assertTrue(FileUtil.isFileExists(passwordFile));
-        assertEquals(PasswordUtil.hashPassword(rawPassword), FileUtil.readFromFile(passwordFile));
+        assertEquals(password, FileUtil.readFromFile(passwordFile));
     }
 
     @Test
