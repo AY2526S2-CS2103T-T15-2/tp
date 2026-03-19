@@ -1,0 +1,65 @@
+@startuml
+!include style.puml
+skinparam ArrowColor LOGIC_COLOR_T4
+skinparam ParticipantBackgroundColor LOGIC_COLOR
+
+box "Core" #LightBlue
+participant ":MainApp" as MainApp
+end box
+
+box "Security" #pink
+participant ":SecurityManager" as Security
+end box
+
+box "Logic" #LightGreen
+participant ":LogicManager" as Logic
+end box
+
+box "Model" #grey
+participant ":Model" as Model
+end box
+
+box "UI" #LightYellow
+participant ":PasswordWindow" as PW
+end box
+
+[-> MainApp : init()
+activate MainApp
+
+MainApp -> Security : isAuthenticated()
+activate Security
+
+Security -> Logic : getAddressBookPassword()
+activate Logic
+Logic -> Model : getAddressBookPassword()
+activate Model
+Model --> Logic : storedPassword
+deactivate Model
+Logic --> Security : storedPassword
+deactivate Logic
+
+alt password is null or invalid
+    Security -> PW : show()
+    activate PW
+    PW --> Security : rawPassword
+    deactivate PW
+
+    Security -> Logic : setAddressBookPassword(rawPassword)
+    activate Logic
+    Logic -> Model : setAddressBookPassword(rawPassword)
+    deactivate Logic
+
+    Security -> Logic : saveAddressBook()
+    activate Logic
+    Logic -> Logic : storage.saveAddressBook()
+    Logic --> Security : success
+    deactivate Logic
+end
+
+Security --> MainApp : isAuthenticated
+deactivate Security
+
+[<-- MainApp
+deactivate MainApp
+
+@enduml
