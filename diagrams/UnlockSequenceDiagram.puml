@@ -1,0 +1,74 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":UnlockCommandParser" as UnlockCommandParser LOGIC_COLOR
+participant "uc:UnlockCommand" as UnlockCommand LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("unlock myPassword123")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("unlock myPassword123")
+activate AddressBookParser
+
+create UnlockCommandParser
+AddressBookParser -> UnlockCommandParser
+activate UnlockCommandParser
+
+UnlockCommandParser --> AddressBookParser
+deactivate UnlockCommandParser
+
+AddressBookParser -> UnlockCommandParser : parse("myPassword123")
+activate UnlockCommandParser
+
+create UnlockCommand
+UnlockCommandParser -> UnlockCommand
+activate UnlockCommand
+
+UnlockCommand --> UnlockCommandParser :
+deactivate UnlockCommand
+
+UnlockCommandParser --> AddressBookParser : uc
+deactivate UnlockCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+UnlockCommandParser -[hidden]-> AddressBookParser
+destroy UnlockCommandParser
+
+AddressBookParser --> LogicManager : uc
+deactivate AddressBookParser
+
+LogicManager -> UnlockCommand : execute(context)
+activate UnlockCommand
+
+UnlockCommand -> Model : getAddressBookPassword()
+activate Model
+
+Model --> UnlockCommand : password
+deactivate Model
+
+alt Password Matches
+    create CommandResult
+    UnlockCommand -> CommandResult
+    activate CommandResult
+
+    CommandResult --> UnlockCommand
+    deactivate CommandResult
+
+    UnlockCommand --> LogicManager : result\n(UNLOCKED mode)
+else Password Does Not Match
+    UnlockCommand --> LogicManager : throws CommandException
+end
+
+deactivate UnlockCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
