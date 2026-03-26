@@ -13,7 +13,10 @@ Class ModelManager
 Class UserPrefs
 
 Class UniquePersonList
-Class Person
+Class Person {
+  status: PersonStatus
+}
+Class PersonStatus
 Class Address
 Class Email
 Class Name
@@ -42,6 +45,7 @@ Person *--> Phone
 Person *--> Email
 Person *--> Address
 Person *--> "*" Tag
+Person *--> PersonStatus
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I
