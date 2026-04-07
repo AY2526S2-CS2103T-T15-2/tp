@@ -4,6 +4,16 @@ skinparam arrowThickness 1.1
 skinparam arrowColor LOGIC_COLOR_T4
 skinparam classBackgroundColor LOGIC_COLOR
 
+package UI as UiPackage {
+Class "<<interface>>\nUi" as Ui
+Class UiManager
+}
+
+package Security as SecurityPackage {
+Class "<<interface>>\nSecurity" as Security
+Class SecurityManager
+}
+
 package Logic as LogicPackage {
 Class "<<interface>>\nLogic" as Logic
 Class LogicManager
@@ -20,12 +30,17 @@ Class StorageManager
 }
 
 Class HiddenOutside #FFFFFF
-HiddenOutside ..> Logic
+HiddenOutside ..> Ui
 
+UiManager .up.|> Ui
+SecurityManager .up.|> Security
 LogicManager .up.|> Logic
 ModelManager .up.|> Model
 StorageManager .up.|> Storage
 
+UiManager --> Logic
+UiManager --> Security
 LogicManager --> Model
 LogicManager --> Storage
+SecurityManager --> Logic
 @enduml

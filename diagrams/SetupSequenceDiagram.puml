@@ -1,0 +1,72 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box UI UI_COLOR_T1
+participant ":MainWindow" as MainWindow UI_COLOR
+participant "setupPanel:SetupPanel" as SetupPanel UI_COLOR
+end box
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant "c:SetupCommand" as SetupCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+[-> MainWindow : executeCommand("setup")
+activate MainWindow
+
+MainWindow -[UI_COLOR]> LogicManager : execute("setup")
+activate LogicManager LOGIC_COLOR
+
+LogicManager -[LOGIC_COLOR]> AddressBookParser : parseCommand("setup")
+activate AddressBookParser LOGIC_COLOR
+
+create SetupCommand
+AddressBookParser -[LOGIC_COLOR]> SetupCommand
+activate SetupCommand LOGIC_COLOR
+
+SetupCommand --[LOGIC_COLOR]> AddressBookParser : c
+deactivate SetupCommand
+
+AddressBookParser --[LOGIC_COLOR]> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -[LOGIC_COLOR]> SetupCommand : execute(context)
+activate SetupCommand LOGIC_COLOR
+
+create CommandResult
+SetupCommand -[LOGIC_COLOR]> CommandResult : <showSetup=true>
+activate CommandResult LOGIC_COLOR
+
+CommandResult --[LOGIC_COLOR]> SetupCommand : r
+deactivate CommandResult
+
+SetupCommand --[LOGIC_COLOR]> LogicManager : r
+deactivate SetupCommand
+
+LogicManager --[LOGIC_COLOR]> MainWindow : r
+deactivate LogicManager
+
+opt r.isShowSetup()
+    MainWindow -[UI_COLOR]> MainWindow : handleSetup()
+    activate MainWindow UI_COLOR_T1
+
+    create SetupPanel
+    MainWindow -[UI_COLOR]> SetupPanel
+    activate SetupPanel UI_COLOR
+
+    SetupPanel --[UI_COLOR]> MainWindow
+    deactivate SetupPanel
+
+    MainWindow --[UI_COLOR]> MainWindow
+    deactivate MainWindow
+end
+
+[<--MainWindow
+deactivate MainWindow
+@enduml
+
+
+

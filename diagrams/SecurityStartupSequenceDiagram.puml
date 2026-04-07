@@ -1,65 +1,52 @@
 @startuml
 !include style.puml
-skinparam ArrowColor LOGIC_COLOR_T4
-skinparam ParticipantBackgroundColor LOGIC_COLOR
+skinparam ArrowFontStyle plain
 
-box "Core" #LightBlue
-participant ":MainApp" as MainApp
+box UI UI_COLOR_T1
+participant ":MainWindow" as MainWindow UI_COLOR
 end box
 
-box "Security" #pink
-participant ":SecurityManager" as Security
+box Security SECURITY_COLOR_T1
+participant ":SecurityManager" as SecurityManager SECURITY_COLOR
 end box
 
-box "Logic" #LightGreen
-participant ":LogicManager" as Logic
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
 end box
 
-box "Model" #grey
-participant ":Model" as Model
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
 end box
 
-box "UI" #LightYellow
-participant ":PasswordWindow" as PW
-end box
+[-> MainWindow : fillInnerParts()
+activate MainWindow
 
-[-> MainApp : init()
-activate MainApp
+MainWindow -[UI_COLOR]> SecurityManager : isAuthenticated()
+activate SecurityManager SECURITY_COLOR
 
-MainApp -> Security : isAuthenticated()
-activate Security
+SecurityManager -[SECURITY_COLOR]> LogicManager : getAddressBookPassword()
+activate LogicManager LOGIC_COLOR
 
-Security -> Logic : getAddressBookPassword()
-activate Logic
-Logic -> Model : getAddressBookPassword()
-activate Model
-Model --> Logic : storedPassword
+LogicManager -[LOGIC_COLOR]> Model : getAddressBookPassword()
+activate Model MODEL_COLOR
+
+Model --[MODEL_COLOR]> LogicManager : storedPassword
 deactivate Model
-Logic --> Security : storedPassword
-deactivate Logic
 
-alt password is null or invalid
-    Security -> PW : show()
-    activate PW
-    PW --> Security : rawPassword
-    deactivate PW
+LogicManager --[LOGIC_COLOR]> SecurityManager : storedPassword
+deactivate LogicManager
 
-    Security -> Logic : setAddressBookPassword(rawPassword)
-    activate Logic
-    Logic -> Model : setAddressBookPassword(rawPassword)
-    deactivate Logic
+SecurityManager --[SECURITY_COLOR]> MainWindow : isAuthenticated
+deactivate SecurityManager
 
-    Security -> Logic : saveAddressBook()
-    activate Logic
-    Logic -> Logic : storage.saveAddressBook()
-    Logic --> Security : success
-    deactivate Logic
+opt !isAuthenticated
+    MainWindow -[UI_COLOR]> MainWindow : handleSetup()
+    activate MainWindow UI_COLOR_T1
+
+    MainWindow --[UI_COLOR]> MainWindow
+    deactivate MainWindow
 end
 
-Security --> MainApp : isAuthenticated
-deactivate Security
-
-[<-- MainApp
-deactivate MainApp
-
+[<-- MainWindow
+deactivate MainWindow
 @enduml

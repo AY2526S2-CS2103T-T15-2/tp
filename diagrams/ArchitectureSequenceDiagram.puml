@@ -4,20 +4,36 @@ skinparam ArrowFontStyle plain
 
 Actor User as user USER_COLOR
 Participant ":UI" as ui UI_COLOR
+Participant ":Security" as security SECURITY_COLOR
 Participant ":Logic" as logic LOGIC_COLOR
 Participant ":Model" as model MODEL_COLOR
 Participant ":Storage" as storage STORAGE_COLOR
 
-user -[USER_COLOR]> ui : "delete 1"
+user -[USER_COLOR]> ui : "submit password"
 activate ui UI_COLOR
 
-ui -[UI_COLOR]> logic : execute("delete 1")
+ui -[UI_COLOR]> security : savePassword("myPassword123")
+activate security SECURITY_COLOR
+
+security -[SECURITY_COLOR]> logic : setAddressBookPassword("myPassword123")
 activate logic LOGIC_COLOR
 
-logic -[LOGIC_COLOR]> model : deletePerson(p)
+logic -[LOGIC_COLOR]> model : setAddressBookPassword("myPassword123")
 activate model MODEL_COLOR
 
-model -[MODEL_COLOR]-> logic
+model --[MODEL_COLOR]> logic
+deactivate model
+
+logic --[LOGIC_COLOR]> security
+deactivate logic
+
+security -[SECURITY_COLOR]> logic : saveAddressBook()
+activate logic LOGIC_COLOR
+
+logic -[LOGIC_COLOR]> model : getAddressBook()
+activate model MODEL_COLOR
+
+model --[MODEL_COLOR]> logic : addressBook
 deactivate model
 
 logic -[LOGIC_COLOR]> storage : saveAddressBook(addressBook)
@@ -31,8 +47,11 @@ deactivate storage
 storage --[STORAGE_COLOR]> logic
 deactivate storage
 
-logic --[LOGIC_COLOR]> ui
+logic --[LOGIC_COLOR]> security
 deactivate logic
+
+security --[SECURITY_COLOR]> ui
+deactivate security
 
 ui--[UI_COLOR]> user
 deactivate ui

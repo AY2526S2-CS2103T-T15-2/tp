@@ -51,6 +51,8 @@
         "storage-component": "Storage component",
         "common-classes": "Common classes",
         "implementation": "Implementation",
+        "setup-password-implementation": "Setup Password Implementation",
+        "design-considerations": "Design considerations",
         "lock-unlock-mode-switching": "Lock/Unlock mode switching",
         "documentation-logging-testing-configuration-dev-ops": "Documentation, logging, testing, configuration, dev-ops",
         "appendix-requirements": "Appendix: Requirements",

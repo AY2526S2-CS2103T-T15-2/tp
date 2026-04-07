@@ -1,0 +1,27 @@
+@startuml
+!include style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor SECURITY_COLOR_T4
+skinparam classBackgroundColor SECURITY_COLOR
+
+package Security as SecurityPackage {
+    Class "<<interface>>\nSecurity" as Security
+    Class SecurityManager
+    Class PasswordUtil
+}
+
+Class HiddenOutside #FFFFFF
+HiddenOutside ..> Security
+
+SecurityManager .up.|> Security
+SecurityManager .left.> PasswordUtil
+
+package Logic {
+    Class HiddenLogic #FFFFFF
+}
+
+SecurityManager -down-> Logic
+@enduml
+
+
+

@@ -10,6 +10,7 @@ Package " "<<Rectangle>>{
     Class Storage STORAGE_COLOR
     Class Model MODEL_COLOR
     Class Main #grey
+    Class Security SECURITY_COLOR
     Class Commons LOGIC_COLOR_T2
 }
 
@@ -19,12 +20,15 @@ Class "<$documents>" as File UI_COLOR_T1
 
 UI -[#green]> Logic
 UI -right[#green]-> Model
+UI -down[#green]-> Security
+Security -[SECURITY_COLOR]-> Logic
 Logic -[#blue]-> Storage
 Logic -down[#blue]-> Model
 Main -[#grey]-> UI
 Main -[#grey]-> Logic
 Main -[#grey]-> Storage
 Main -up[#grey]-> Model
+Main -[#grey]-> Security
 Main -down[hidden]-> Commons
 
 Storage -up[STORAGE_COLOR].> Model
