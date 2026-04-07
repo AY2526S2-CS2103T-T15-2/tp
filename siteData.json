@@ -136,9 +136,9 @@
     },
     {
       "src": "index.md",
-      "title": "",
+      "title": "Spyglass",
       "headings": {
-        "addressbook-level-3": "AddressBook Level-3"
+        "spyglass": "Spyglass"
       },
       "headingKeywords": {}
     },
