@@ -16,6 +16,7 @@ Class UniquePersonList
 Class Person {
   status: PersonStatus
 }
+Class AppMode
 Class PersonStatus
 Class Address
 Class Email
@@ -34,6 +35,7 @@ AddressBook .up.|> ReadOnlyAddressBook
 ModelManager .up.|> Model
 Model .right.> ReadOnlyUserPrefs
 Model .left.> ReadOnlyAddressBook
+Model .down.> AppMode
 ModelManager -left-> "1" AddressBook
 ModelManager -right-> "1" UserPrefs
 UserPrefs .up.|> ReadOnlyUserPrefs
@@ -54,5 +56,6 @@ Name -[hidden]right-> Phone
 Phone -[hidden]right-> Address
 Address -[hidden]right-> Email
 
-ModelManager --> "~* filtered" Person
+ModelManager --> "~* filtered (locked)" Person
+ModelManager --> "~* filtered (unlocked)" Person
 @enduml
