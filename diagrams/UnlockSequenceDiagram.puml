@@ -5,12 +5,20 @@ skinparam ArrowFontStyle plain
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":CommandRegistry" as CommandRegistry LOGIC_COLOR
 participant ":UnlockCommandParser" as UnlockCommandParser LOGIC_COLOR
 participant "uc:UnlockCommand" as UnlockCommand LOGIC_COLOR
+participant "context:CommandContext" as CommandContext LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+participant ":AppModeManager" as AppModeManager LOGIC_COLOR
 end box
 
 box Model MODEL_COLOR_T1
 participant ":Model" as Model MODEL_COLOR
+end box
+
+box Storage STORAGE_COLOR_T1
+participant ":Storage" as Storage STORAGE_COLOR
 end box
 
 [-> LogicManager : execute("unlock myPassword123")
@@ -19,56 +27,87 @@ activate LogicManager
 LogicManager -> AddressBookParser : parseCommand("unlock myPassword123")
 activate AddressBookParser
 
-create UnlockCommandParser
-AddressBookParser -> UnlockCommandParser
-activate UnlockCommandParser
+AddressBookParser -> CommandRegistry : parse("unlock", " myPassword123", currentMode)
+activate CommandRegistry
 
-UnlockCommandParser --> AddressBookParser
-deactivate UnlockCommandParser
-
-AddressBookParser -> UnlockCommandParser : parse("myPassword123")
+CommandRegistry -> UnlockCommandParser : parse(" myPassword123")
 activate UnlockCommandParser
 
 create UnlockCommand
-UnlockCommandParser -> UnlockCommand
+UnlockCommandParser -> UnlockCommand : UnlockCommand(password)
 activate UnlockCommand
-
-UnlockCommand --> UnlockCommandParser :
+UnlockCommand --> UnlockCommandParser : uc
 deactivate UnlockCommand
 
-UnlockCommandParser --> AddressBookParser : uc
+UnlockCommandParser --> CommandRegistry : uc
 deactivate UnlockCommandParser
-'Hidden arrow to position the destroy marker below the end of the activation bar.
-UnlockCommandParser -[hidden]-> AddressBookParser
-destroy UnlockCommandParser
+
+CommandRegistry --> AddressBookParser : uc
+deactivate CommandRegistry
 
 AddressBookParser --> LogicManager : uc
 deactivate AddressBookParser
 
+create CommandContext
+LogicManager -> CommandContext : CommandContext(model, currentMode)
+activate CommandContext
+CommandContext --> LogicManager : context
+deactivate CommandContext
+
 LogicManager -> UnlockCommand : execute(context)
 activate UnlockCommand
 
+UnlockCommand -> CommandContext : getModel()
+activate CommandContext
+CommandContext --> UnlockCommand : model
+deactivate CommandContext
+
+UnlockCommand -> CommandContext : getAppMode()
+activate CommandContext
+CommandContext --> UnlockCommand : currentMode
+deactivate CommandContext
+
 UnlockCommand -> Model : getAddressBookPassword()
 activate Model
-
-Model --> UnlockCommand : password
+Model --> UnlockCommand : storedPassword
 deactivate Model
 
-alt Password Matches
+alt password matches
     create CommandResult
-    UnlockCommand -> CommandResult
+    UnlockCommand -> CommandResult : CommandResult(feedback,\nrequestedMode=UNLOCKED)
     activate CommandResult
-
-    CommandResult --> UnlockCommand
+    CommandResult --> UnlockCommand : r
     deactivate CommandResult
 
-    UnlockCommand --> LogicManager : result\n(UNLOCKED mode)
-else Password Does Not Match
+    UnlockCommand --> LogicManager : r
+    deactivate UnlockCommand
+
+    LogicManager -> AppModeManager : transitionTo(UNLOCKED)
+    activate AppModeManager
+    AppModeManager --> LogicManager
+    deactivate AppModeManager
+
+    LogicManager -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS,\nUNLOCKED)
+    activate Model
+    Model --> LogicManager
+    deactivate Model
+
+    LogicManager -> Model : getAddressBook()
+    activate Model
+    Model --> LogicManager : addressBook
+    deactivate Model
+
+    LogicManager -> Storage : saveAddressBook(addressBook)
+    activate Storage
+    Storage --> LogicManager
+    deactivate Storage
+
+    [<-- LogicManager : r
+else password does not match
     UnlockCommand --> LogicManager : throws CommandException
+    deactivate UnlockCommand
+    [<-- LogicManager
 end
 
-deactivate UnlockCommand
-
-[<--LogicManager
 deactivate LogicManager
 @enduml

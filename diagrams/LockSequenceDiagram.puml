@@ -1,0 +1,84 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":CommandRegistry" as CommandRegistry LOGIC_COLOR
+participant "lc:LockCommand" as LockCommand LOGIC_COLOR
+participant "context:CommandContext" as CommandContext LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+participant ":AppModeManager" as AppModeManager LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+box Storage STORAGE_COLOR_T1
+participant ":Storage" as Storage STORAGE_COLOR
+end box
+
+[-> LogicManager : execute("lock")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("lock")
+activate AddressBookParser
+
+AddressBookParser -> CommandRegistry : parse("lock", "", currentMode)
+activate CommandRegistry
+
+create LockCommand
+CommandRegistry -> LockCommand : LockCommand()
+activate LockCommand
+LockCommand --> CommandRegistry : lc
+deactivate LockCommand
+
+CommandRegistry --> AddressBookParser : lc
+deactivate CommandRegistry
+
+AddressBookParser --> LogicManager : lc
+deactivate AddressBookParser
+
+create CommandContext
+LogicManager -> CommandContext : CommandContext(model, currentMode)
+activate CommandContext
+CommandContext --> LogicManager : context
+deactivate CommandContext
+
+LogicManager -> LockCommand : execute(context)
+activate LockCommand
+
+create CommandResult
+LockCommand -> CommandResult : CommandResult(feedback,\nrequestedMode=LOCKED)
+activate CommandResult
+CommandResult --> LockCommand : r
+deactivate CommandResult
+
+LockCommand --> LogicManager : r
+deactivate LockCommand
+
+LogicManager -> AppModeManager : transitionTo(LOCKED)
+activate AppModeManager
+AppModeManager --> LogicManager
+deactivate AppModeManager
+
+LogicManager -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS,\nLOCKED)
+activate Model
+Model --> LogicManager
+deactivate Model
+
+LogicManager -> Model : getAddressBook()
+activate Model
+Model --> LogicManager : addressBook
+deactivate Model
+
+LogicManager -> Storage : saveAddressBook(addressBook)
+activate Storage
+Storage --> LogicManager
+deactivate Storage
+
+[<-- LogicManager : r
+deactivate LogicManager
+@enduml

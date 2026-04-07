@@ -1,0 +1,22 @@
+@startuml
+hide empty description
+
+state "LOCKED mode" as Locked
+state "UNLOCKED mode" as Unlocked
+
+[*] --> Locked
+
+Locked : AppMode.LOCKED
+Locked : title = "AddressBook"
+Locked : visible list = filteredLockedPersons
+Locked : detail status hidden
+
+Unlocked : AppMode.UNLOCKED
+Unlocked : title = "Spyglass"
+Unlocked : visible list = filteredUnlockedPersons
+Unlocked : detail status visible
+
+Locked --> Unlocked : unlock PASSWORD\n(password matches)
+Locked --> Locked : unlock PASSWORD\n(password does not match)
+Unlocked --> Locked : lock
+@enduml

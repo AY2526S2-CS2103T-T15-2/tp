@@ -3,45 +3,58 @@
 skinparam arrowThickness 1.1
 skinparam arrowColor LOGIC_COLOR_T4
 skinparam classBackgroundColor LOGIC_COLOR
+left to right direction
 
-package Logic as LogicPackage {
-
-package "Parser Classes" as ParserClasses{
-}
-Class XYZCommand
-Class CommandResult
-Class "{abstract}\nCommand" as Command
-
-
-Class "<<interface>>\nLogic" as Logic
-Class LogicManager
+package Logic {
+    class LogicManager
+    class AddressBookParser
+    class CommandRegistry
+    abstract class Command
+    class CommandContext
+    class CommandResult
+    class AppModeManager
+    class AppMode
 }
 
 package Model {
-Class HiddenModel #FFFFFF
+    interface "Model" as ModelApi
 }
 
 package Storage {
+    interface "Storage" as StorageApi
 }
 
-Class HiddenOutside #FFFFFF
-HiddenOutside ..> Logic
+LogicManager --> AddressBookParser
+LogicManager --> AppModeManager
+LogicManager --> ModelApi
+LogicManager --> StorageApi
+LogicManager ..> CommandContext
+LogicManager ..> Command
 
-LogicManager .right.|> Logic
-LogicManager -right->"1" ParserClasses
-ParserClasses ..> XYZCommand : <<create>>
+AddressBookParser --> CommandRegistry
+CommandRegistry ..> Command
 
-XYZCommand -up-|> Command
-LogicManager .left.> Command : <<call>>
+Command ..> CommandContext
+Command ..> CommandResult
+CommandContext --> ModelApi
+CommandContext --> AppMode
+AppModeManager --> AppMode
+CommandResult --> AppMode
 
-LogicManager --> Model
-LogicManager --> Storage
-Storage --[hidden] Model
-Command .[hidden]up.> Storage
-Command .right.> Model
-note right of XYZCommand: XYZCommand = AddCommand, \nFindCommand, etc
+note bottom of CommandContext
+  Captures the Model and AppMode
+  at execution time.
+end note
 
-Logic ..> CommandResult
-LogicManager .down.> CommandResult
-Command .up.> CommandResult : <<create>>
+note bottom of CommandRegistry
+  Delegates parsing to:
+  AddCommandParser, DeleteCommandParser,
+  EditCommandParser, FindCommandParser,
+  HelpCommandParser, ToggleCommandParser,
+  UnlockCommandParser, and ViewCommandParser.
+
+  Instantiates directly:
+  ClearCommand, ExitCommand, ListCommand,
+  LockCommand, and SetupCommand.
+end note
 @enduml
