@@ -49,20 +49,18 @@ deactivate SetupCommand
 LogicManager --[LOGIC_COLOR]> MainWindow : r
 deactivate LogicManager
 
-opt r.isShowSetup()
-    MainWindow -[UI_COLOR]> MainWindow : handleSetup()
-    activate MainWindow UI_COLOR_T1
+MainWindow -[UI_COLOR]> MainWindow : handleSetup()
+activate MainWindow UI_COLOR_T1
 
-    create SetupPanel
-    MainWindow -[UI_COLOR]> SetupPanel
-    activate SetupPanel UI_COLOR
+create SetupPanel
+MainWindow -[UI_COLOR]> SetupPanel
+activate SetupPanel UI_COLOR
 
-    SetupPanel --[UI_COLOR]> MainWindow
-    deactivate SetupPanel
+SetupPanel --[UI_COLOR]> MainWindow
+deactivate SetupPanel
 
-    MainWindow --[UI_COLOR]> MainWindow
-    deactivate MainWindow
-end
+MainWindow --[UI_COLOR]> MainWindow
+deactivate MainWindow
 
 [<--MainWindow
 deactivate MainWindow

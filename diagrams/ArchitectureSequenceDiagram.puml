@@ -9,7 +9,7 @@ Participant ":Logic" as logic LOGIC_COLOR
 Participant ":Model" as model MODEL_COLOR
 Participant ":Storage" as storage STORAGE_COLOR
 
-user -[USER_COLOR]> ui : "submit password"
+user -[USER_COLOR]> ui : submit password
 activate ui UI_COLOR
 
 ui -[UI_COLOR]> security : savePassword("myPassword123")
