@@ -42,7 +42,7 @@ LogicManager -> LockCommand : execute(context)
 activate LockCommand
 
 create CommandResult
-LockCommand -> CommandResult : CommandResult(feedback,\nrequestedMode=LOCKED)
+LockCommand -> CommandResult : CommandResult(feedback,requestedMode=LOCKED)
 activate CommandResult
 CommandResult --> LockCommand : r
 deactivate CommandResult
