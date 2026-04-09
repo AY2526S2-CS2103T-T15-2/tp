@@ -10,15 +10,10 @@ participant ":UnlockCommandParser" as UnlockCommandParser LOGIC_COLOR
 participant "uc:UnlockCommand" as UnlockCommand LOGIC_COLOR
 participant "context:CommandContext" as CommandContext LOGIC_COLOR
 participant "r:CommandResult" as CommandResult LOGIC_COLOR
-participant ":AppModeManager" as AppModeManager LOGIC_COLOR
 end box
 
 box Model MODEL_COLOR_T1
 participant ":Model" as Model MODEL_COLOR
-end box
-
-box Storage STORAGE_COLOR_T1
-participant ":Storage" as Storage STORAGE_COLOR
 end box
 
 [-> LogicManager : execute("unlock myPassword123")
@@ -74,33 +69,12 @@ deactivate Model
 
 alt password matches
     create CommandResult
-    UnlockCommand -> CommandResult : CommandResult(feedback,\nrequestedMode=UNLOCKED)
-    activate CommandResult
+    UnlockCommand -> CommandResult ++ : CommandResult(feedback,\nrequestedMode=UNLOCKED)
     CommandResult --> UnlockCommand : r
     deactivate CommandResult
 
     UnlockCommand --> LogicManager : r
     deactivate UnlockCommand
-
-    LogicManager -> AppModeManager : transitionTo(UNLOCKED)
-    activate AppModeManager
-    AppModeManager --> LogicManager
-    deactivate AppModeManager
-
-    LogicManager -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS,\nUNLOCKED)
-    activate Model
-    Model --> LogicManager
-    deactivate Model
-
-    LogicManager -> Model : getAddressBook()
-    activate Model
-    Model --> LogicManager : addressBook
-    deactivate Model
-
-    LogicManager -> Storage : saveAddressBook(addressBook)
-    activate Storage
-    Storage --> LogicManager
-    deactivate Storage
 
     [<-- LogicManager : r
 else password does not match

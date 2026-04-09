@@ -3,79 +3,44 @@
 skinparam arrowThickness 1.1
 skinparam arrowColor LOGIC_COLOR_T4
 skinparam classBackgroundColor LOGIC_COLOR
-left to right direction
+skinparam classBackgroundColor<<ghost>> transparent
+skinparam classBorderColor<<ghost>> transparent
+skinparam classFontColor<<ghost>> transparent
+hide stereotype
 
 package "Parser classes" {
-    interface Parser
+    class "<<interface>>\nParser" as Parser
     class AddressBookParser
     class CommandRegistry
-    class AddCommandParser
-    class DeleteCommandParser
-    class EditCommandParser
-    class FindCommandParser
-    class HelpCommandParser
-    class ToggleCommandParser
-    class UnlockCommandParser
-    class ViewCommandParser
-    class ArgumentTokenizer
+    class XYZCommandParser
+    class "{abstract}\nCommand" as Command
+    class XYZCommand
     class ArgumentMultimap
-    class ParserUtil
+    class ArgumentTokenizer
     class CliSyntax
+    class ParserUtil
     class Prefix
 }
 
-AddressBookParser --> CommandRegistry
+class IncomingArrow <<ghost>>
 
-AddCommandParser ..|> Parser
-DeleteCommandParser ..|> Parser
-EditCommandParser ..|> Parser
-FindCommandParser ..|> Parser
-HelpCommandParser ..|> Parser
-ToggleCommandParser ..|> Parser
-UnlockCommandParser ..|> Parser
-ViewCommandParser ..|> Parser
+IncomingArrow .down.> AddressBookParser
+AddressBookParser -down-> CommandRegistry
 
-CommandRegistry ..> AddCommandParser
-CommandRegistry ..> DeleteCommandParser
-CommandRegistry ..> EditCommandParser
-CommandRegistry ..> FindCommandParser
-CommandRegistry ..> HelpCommandParser
-CommandRegistry ..> ToggleCommandParser
-CommandRegistry ..> UnlockCommandParser
-CommandRegistry ..> ViewCommandParser
+XYZCommandParser .up.|> Parser
+CommandRegistry .down.> XYZCommandParser : <<create>>
+CommandRegistry .right.> Command : <<use>>
 
-AddCommandParser ..> ArgumentTokenizer
-AddCommandParser ..> ArgumentMultimap
-AddCommandParser ..> ParserUtil
-AddCommandParser ..> CliSyntax
+XYZCommandParser .left.> ArgumentMultimap
+XYZCommandParser .left.> ArgumentTokenizer
+XYZCommandParser .down.> CliSyntax
+XYZCommandParser .right.> ParserUtil
+XYZCommandParser .right.> XYZCommand : <<create>>
 
-EditCommandParser ..> ArgumentTokenizer
-EditCommandParser ..> ArgumentMultimap
-EditCommandParser ..> ParserUtil
-EditCommandParser ..> CliSyntax
+ArgumentTokenizer .left.> ArgumentMultimap
+ArgumentTokenizer .down.> Prefix
+CliSyntax .down.> Prefix
+ParserUtil .down.> Prefix
 
-DeleteCommandParser ..> ParserUtil
-ToggleCommandParser ..> ParserUtil
-ViewCommandParser ..> ParserUtil
-
-ArgumentTokenizer --> ArgumentMultimap
-ArgumentTokenizer ..> Prefix
-CliSyntax ..> Prefix
-ParserUtil ..> Prefix
-
-note right of CommandRegistry
-  AddressBookParser delegates
-  mode-aware command routing
-  to CommandRegistry.
-
-  CommandRegistry delegates to:
-  AddCommandParser, DeleteCommandParser,
-  EditCommandParser, FindCommandParser,
-  HelpCommandParser, ToggleCommandParser,
-  UnlockCommandParser, and ViewCommandParser.
-
-  It also creates ClearCommand,
-  ExitCommand, ListCommand,
-  LockCommand, and SetupCommand directly.
-end note
+XYZCommand -up-|> Command
 @enduml

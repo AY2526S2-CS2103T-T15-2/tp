@@ -3,7 +3,6 @@
 skinparam arrowThickness 1.1
 skinparam arrowColor LOGIC_COLOR_T4
 skinparam classBackgroundColor LOGIC_COLOR
-left to right direction
 
 package Logic {
     class LogicManager
@@ -41,20 +40,28 @@ CommandContext --> AppMode
 AppModeManager --> AppMode
 CommandResult --> AppMode
 
+' hidden links to stabilize layout
+LogicManager -[hidden]-> Command
+LogicManager -[hidden]-> CommandResult
+LogicManager -[hidden]-> CommandContext
+AppModeManager -[hidden]-> AddressBookParser
+StorageApi -[hidden]-> ModelApi
+
 note bottom of CommandContext
   Captures the Model and AppMode
   at execution time.
 end note
 
-note bottom of CommandRegistry
-  Delegates parsing to:
-  AddCommandParser, DeleteCommandParser,
-  EditCommandParser, FindCommandParser,
-  HelpCommandParser, ToggleCommandParser,
-  UnlockCommandParser, and ViewCommandParser.
+note right of CommandRegistry
+  Delegates parsing to
+  dedicated parsers for
+  add, delete, edit,
+  find, help, toggle,
+  unlock, and view.
 
-  Instantiates directly:
-  ClearCommand, ExitCommand, ListCommand,
-  LockCommand, and SetupCommand.
+  Instantiates simple
+  commands directly for
+  clear, exit, list,
+  lock, and setup.
 end note
 @enduml
