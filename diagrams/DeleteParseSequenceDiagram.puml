@@ -47,6 +47,5 @@ deactivate CommandRegistry
 AddressBookParser --> LogicManager : d
 deactivate AddressBookParser
 
-[<-- LogicManager
 deactivate LogicManager
 @enduml
