@@ -1,0 +1,52 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** parse and route unlock command
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":CommandRegistry" as CommandRegistry LOGIC_COLOR
+participant ":UnlockCommandParser" as UnlockCommandParser LOGIC_COLOR
+participant "uc:UnlockCommand" as UnlockCommand LOGIC_COLOR
+end box
+
+[-> LogicManager : parseCommand("unlock myPassword123")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("unlock myPassword123")
+activate AddressBookParser
+
+AddressBookParser -> CommandRegistry : parse("unlock", "myPassword123", currentMode)
+activate CommandRegistry
+
+' Added initialization step here
+create UnlockCommandParser
+CommandRegistry -> UnlockCommandParser : UnlockCommandParser()
+activate UnlockCommandParser
+UnlockCommandParser --> CommandRegistry : parser
+deactivate UnlockCommandParser
+
+CommandRegistry -> UnlockCommandParser : parse("myPassword123")
+activate UnlockCommandParser
+
+create UnlockCommand
+UnlockCommandParser -> UnlockCommand : UnlockCommand(password)
+activate UnlockCommand
+UnlockCommand --> UnlockCommandParser : uc
+deactivate UnlockCommand
+
+UnlockCommandParser --> CommandRegistry : uc
+deactivate UnlockCommandParser
+destroy UnlockCommandParser
+
+CommandRegistry --> AddressBookParser : uc
+deactivate CommandRegistry
+
+AddressBookParser --> LogicManager : uc
+deactivate AddressBookParser
+
+[<-- LogicManager : uc
+deactivate LogicManager
+@enduml

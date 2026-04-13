@@ -1,12 +1,13 @@
 @startuml
 !include style.puml
 skinparam ArrowFontStyle plain
+skinparam sequence {
+    ReferenceBackgroundColor #FFFFFF
+    ReferenceBorderColor #333333
+}
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
-participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
-participant ":CommandRegistry" as CommandRegistry LOGIC_COLOR
-participant ":UnlockCommandParser" as UnlockCommandParser LOGIC_COLOR
 participant "uc:UnlockCommand" as UnlockCommand LOGIC_COLOR
 participant "context:CommandContext" as CommandContext LOGIC_COLOR
 participant "r:CommandResult" as CommandResult LOGIC_COLOR
@@ -19,30 +20,9 @@ end box
 [-> LogicManager : execute("unlock myPassword123")
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("unlock myPassword123")
-activate AddressBookParser
-
-AddressBookParser -> CommandRegistry : parse("unlock", " myPassword123", currentMode)
-activate CommandRegistry
-
-CommandRegistry -> UnlockCommandParser : parse(" myPassword123")
-activate UnlockCommandParser
-
-create UnlockCommand
-UnlockCommandParser -> UnlockCommand : UnlockCommand(password)
-activate UnlockCommand
-UnlockCommand --> UnlockCommandParser : uc
-deactivate UnlockCommand
-
-UnlockCommandParser --> CommandRegistry : uc
-deactivate UnlockCommandParser
-
-CommandRegistry --> AddressBookParser : uc
-deactivate CommandRegistry
-destroy UnlockCommandParser
-
-AddressBookParser --> LogicManager : uc
-deactivate AddressBookParser
+ref over LogicManager
+Parse and route unlock command
+end ref
 
 create CommandContext
 LogicManager -> CommandContext : CommandContext(model, currentMode)

@@ -1,13 +1,13 @@
 @startuml
 !include style.puml
 skinparam ArrowFontStyle plain
+skinparam sequence {
+	ReferenceBackgroundColor #FFFFFF
+	ReferenceBorderColor #333333
+}
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
-participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
-participant ":CommandRegistry" as CommandRegistry LOGIC_COLOR
-participant ":DeleteCommandParser" as DeleteCommandParser LOGIC_COLOR
-participant "d:DeleteCommand" as DeleteCommand LOGIC_COLOR
 participant "context:CommandContext" as CommandContext LOGIC_COLOR
 participant "r:CommandResult" as CommandResult LOGIC_COLOR
 end box
@@ -19,36 +19,9 @@ end box
 [-> LogicManager : execute("delete 1")
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("delete 1")
-activate AddressBookParser
-
-AddressBookParser -> CommandRegistry : parse("delete", " 1", currentMode)
-activate CommandRegistry
-
-create DeleteCommandParser
-CommandRegistry -> DeleteCommandParser : DeleteCommandParser()
-activate DeleteCommandParser
-DeleteCommandParser --> CommandRegistry : parser
-deactivate DeleteCommandParser
-
-CommandRegistry -> DeleteCommandParser : parse(" 1")
-activate DeleteCommandParser
-
-create DeleteCommand
-DeleteCommandParser -> DeleteCommand : DeleteCommand(index)
-activate DeleteCommand
-DeleteCommand --> DeleteCommandParser : d
-deactivate DeleteCommand
-
-DeleteCommandParser --> CommandRegistry : d
-deactivate DeleteCommandParser
-
-CommandRegistry --> AddressBookParser : d
-deactivate CommandRegistry
-destroy DeleteCommandParser
-
-AddressBookParser --> LogicManager : d
-deactivate AddressBookParser
+ref over LogicManager
+Parse and route delete command
+end ref
 
 create CommandContext
 LogicManager -> CommandContext : CommandContext(model, currentMode)
@@ -56,37 +29,21 @@ activate CommandContext
 CommandContext --> LogicManager : context
 deactivate CommandContext
 
-LogicManager -> DeleteCommand : execute(context)
-activate DeleteCommand
-
-DeleteCommand -> CommandContext : getModel()
-activate CommandContext
-CommandContext --> DeleteCommand : model
-deactivate CommandContext
-
-DeleteCommand -> CommandContext : getAppMode()
-activate CommandContext
-CommandContext --> DeleteCommand : currentMode
-deactivate CommandContext
-
-DeleteCommand -> Model : getFilteredPersonList(currentMode)
+LogicManager -> Model : getFilteredPersonList(currentMode)
 activate Model
-Model --> DeleteCommand : lastShownList
+Model --> LogicManager : lastShownList
 deactivate Model
 
-DeleteCommand -> Model : deletePerson(personToDelete, currentMode)
+LogicManager -> Model : deletePerson(personToDelete, currentMode)
 activate Model
-Model --> DeleteCommand
+Model --> LogicManager
 deactivate Model
 
 create CommandResult
-DeleteCommand -> CommandResult : CommandResult(feedback)
+LogicManager -> CommandResult : CommandResult(feedback)
 activate CommandResult
-CommandResult --> DeleteCommand : r
+CommandResult --> LogicManager : r
 deactivate CommandResult
-
-DeleteCommand --> LogicManager : r
-deactivate DeleteCommand
 
 [<-- LogicManager : r
 deactivate LogicManager

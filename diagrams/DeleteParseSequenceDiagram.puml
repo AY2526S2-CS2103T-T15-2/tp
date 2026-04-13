@@ -1,0 +1,51 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+' This line creates the "sd" frame around the entire diagram
+mainframe **sd** Parse and route delete command
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":CommandRegistry" as CommandRegistry LOGIC_COLOR
+participant ":DeleteCommandParser" as DeleteCommandParser LOGIC_COLOR
+participant "d:DeleteCommand" as DeleteCommand LOGIC_COLOR
+end box
+
+[-> LogicManager : execute("delete 1")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("delete 1")
+activate AddressBookParser
+
+AddressBookParser -> CommandRegistry : parse("delete", "1", currentMode)
+activate CommandRegistry
+
+create DeleteCommandParser
+CommandRegistry -> DeleteCommandParser : DeleteCommandParser()
+activate DeleteCommandParser
+DeleteCommandParser --> CommandRegistry : parser
+deactivate DeleteCommandParser
+
+CommandRegistry -> DeleteCommandParser : parse("1")
+activate DeleteCommandParser
+
+create DeleteCommand
+DeleteCommandParser -> DeleteCommand : DeleteCommand(index)
+activate DeleteCommand
+DeleteCommand --> DeleteCommandParser : d
+deactivate DeleteCommand
+
+DeleteCommandParser --> CommandRegistry : d
+deactivate DeleteCommandParser
+
+CommandRegistry --> AddressBookParser : d
+deactivate CommandRegistry
+
+AddressBookParser --> LogicManager : d
+deactivate AddressBookParser
+
+[<-- LogicManager : d
+deactivate LogicManager
+@enduml
