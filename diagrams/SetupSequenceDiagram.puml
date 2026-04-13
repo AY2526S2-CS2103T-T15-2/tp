@@ -37,7 +37,7 @@ LogicManager -[LOGIC_COLOR]> SetupCommand : execute(context)
 activate SetupCommand LOGIC_COLOR
 
 create CommandResult
-SetupCommand -[LOGIC_COLOR]> CommandResult : <showSetup=true>
+SetupCommand -[LOGIC_COLOR]> CommandResult : CommandResult(feedback, showSetup=True)
 activate CommandResult LOGIC_COLOR
 
 CommandResult --[LOGIC_COLOR]> SetupCommand : r

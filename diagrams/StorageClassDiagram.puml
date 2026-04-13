@@ -39,7 +39,7 @@ JsonAddressBookStorage .up.|> AddressBookStorage
 JsonAddressBookStorage ..> JsonSerializableAddressBook
 
 note top of JsonSerializableAddressBook
-  Serialises the contacts
+  Serializes the contacts
   and the password
 end note
 

@@ -45,6 +45,7 @@ deactivate DeleteCommandParser
 
 CommandRegistry --> AddressBookParser : d
 deactivate CommandRegistry
+destroy DeleteCommandParser
 
 AddressBookParser --> LogicManager : d
 deactivate AddressBookParser

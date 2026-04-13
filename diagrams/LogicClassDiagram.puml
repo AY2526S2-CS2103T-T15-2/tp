@@ -4,11 +4,13 @@ skinparam arrowThickness 1.1
 skinparam arrowColor LOGIC_COLOR_T4
 skinparam classBackgroundColor LOGIC_COLOR
 
+skinparam classFontStyle plain
+
 package Logic {
     class LogicManager
     class AddressBookParser
     class CommandRegistry
-    abstract class Command
+    class "{abstract}\nCommand" as Command
     class CommandContext
     class CommandResult
     class AppModeManager
@@ -16,11 +18,11 @@ package Logic {
 }
 
 package Model {
-    interface "Model" as ModelApi
+    class "<<interface>>\nModel" as ModelApi
 }
 
 package Storage {
-    interface "Storage" as StorageApi
+    class "<<interface>>\nStorage" as StorageApi
 }
 
 LogicManager --> AddressBookParser

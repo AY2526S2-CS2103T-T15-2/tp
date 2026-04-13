@@ -39,6 +39,7 @@ deactivate UnlockCommandParser
 
 CommandRegistry --> AddressBookParser : uc
 deactivate CommandRegistry
+destroy UnlockCommandParser
 
 AddressBookParser --> LogicManager : uc
 deactivate AddressBookParser
