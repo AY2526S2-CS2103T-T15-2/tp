@@ -39,6 +39,7 @@ deactivate DeleteCommand
 
 DeleteCommandParser --> CommandRegistry : d
 deactivate DeleteCommandParser
+destroy DeleteCommandParser
 
 CommandRegistry --> AddressBookParser : d
 deactivate CommandRegistry
@@ -46,6 +47,6 @@ deactivate CommandRegistry
 AddressBookParser --> LogicManager : d
 deactivate AddressBookParser
 
-[<-- LogicManager : d
+[<-- LogicManager
 deactivate LogicManager
 @enduml

@@ -8,6 +8,7 @@ skinparam sequence {
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant "d:DeleteCommand" as DeleteCommand LOGIC_COLOR
 participant "context:CommandContext" as CommandContext LOGIC_COLOR
 participant "r:CommandResult" as CommandResult LOGIC_COLOR
 end box
@@ -19,7 +20,7 @@ end box
 [-> LogicManager : execute("delete 1")
 activate LogicManager
 
-ref over LogicManager
+ref over LogicManager, DeleteCommand
 Parse and route delete command
 end ref
 
@@ -29,21 +30,27 @@ activate CommandContext
 CommandContext --> LogicManager : context
 deactivate CommandContext
 
-LogicManager -> Model : getFilteredPersonList(currentMode)
+LogicManager -> DeleteCommand : execute(context)
+activate DeleteCommand
+
+DeleteCommand -> Model : getFilteredPersonList(currentMode)
 activate Model
-Model --> LogicManager : lastShownList
+Model --> DeleteCommand : lastShownList
 deactivate Model
 
-LogicManager -> Model : deletePerson(personToDelete, currentMode)
+DeleteCommand -> Model : deletePerson(personToDelete, currentMode)
 activate Model
-Model --> LogicManager
+Model --> DeleteCommand
 deactivate Model
 
 create CommandResult
-LogicManager -> CommandResult : CommandResult(feedback)
+DeleteCommand -> CommandResult : CommandResult(feedback)
 activate CommandResult
-CommandResult --> LogicManager : r
+CommandResult --> DeleteCommand : r
 deactivate CommandResult
+
+DeleteCommand --> LogicManager : r
+deactivate DeleteCommand
 
 [<-- LogicManager : r
 deactivate LogicManager

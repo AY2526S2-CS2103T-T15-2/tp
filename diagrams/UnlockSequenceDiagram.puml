@@ -20,7 +20,7 @@ end box
 [-> LogicManager : execute("unlock myPassword123")
 activate LogicManager
 
-ref over LogicManager
+ref over LogicManager, UnlockCommand
 Parse and route unlock command
 end ref
 
@@ -57,7 +57,17 @@ alt password matches
     UnlockCommand --> LogicManager : r
     deactivate UnlockCommand
 
-    [<-- LogicManager : r
+    LogicManager -> CommandResult : getRequestedMode()
+    activate CommandResult
+    CommandResult --> LogicManager : UNLOCKED
+    deactivate CommandResult
+
+    LogicManager -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS, UNLOCKED)
+    activate Model
+    Model --> LogicManager
+    deactivate Model
+
+    [<-- LogicManager
 else password does not match
     UnlockCommand --> LogicManager : throws CommandException
     deactivate UnlockCommand

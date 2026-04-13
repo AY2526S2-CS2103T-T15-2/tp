@@ -2,7 +2,7 @@
 !include style.puml
 skinparam ArrowFontStyle plain
 
-mainframe **sd** parse and route unlock command
+mainframe **sd** Parse and route unlock command
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
@@ -47,6 +47,6 @@ deactivate CommandRegistry
 AddressBookParser --> LogicManager : uc
 deactivate AddressBookParser
 
-[<-- LogicManager : uc
+[<-- LogicManager
 deactivate LogicManager
 @enduml
