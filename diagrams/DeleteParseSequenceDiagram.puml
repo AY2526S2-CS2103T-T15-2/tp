@@ -39,10 +39,10 @@ deactivate DeleteCommand
 
 DeleteCommandParser --> CommandRegistry : d
 deactivate DeleteCommandParser
-destroy DeleteCommandParser
 
 CommandRegistry --> AddressBookParser : d
 deactivate CommandRegistry
+destroy DeleteCommandParser
 
 AddressBookParser --> LogicManager : d
 deactivate AddressBookParser

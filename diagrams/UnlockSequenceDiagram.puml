@@ -69,6 +69,7 @@ alt password matches
 
     [<-- LogicManager
 else password does not match
+    UnlockCommand -[hidden]> UnlockCommand ++
     UnlockCommand --> LogicManager : throws CommandException
     deactivate UnlockCommand
     [<-- LogicManager
